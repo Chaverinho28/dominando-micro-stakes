@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ChapterPage = lazy(() => import('./pages/ChapterPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const TrainingPage = lazy(() => import('./pages/TrainingPage'))
 
 function App(): React.JSX.Element {
   return (
@@ -11,6 +12,7 @@ function App(): React.JSX.Element {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/capitulos/:chapterId" element={<ChapterPage />} />
+        <Route path="/treinamento" element={<TrainingPage />} />
         <Route path="/nao-encontrado" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/nao-encontrado" replace />} />
       </Routes></Suspense>

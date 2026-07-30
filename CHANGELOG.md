@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — Product experience sprint
+
+- Redesenha a Home como experiência de aprendizado com continuidade, missão diária, XP e sequência.
+- Agrupa a navegação lateral por fundamentos, pré-flop e pós-flop.
+- Adiciona Centro de Treinamento com decisão pré-flop e feedback imediato.
+- Atualiza cards de módulos, responsividade e microinterações.
+
 ## 0.4.0 — Sprint 4
 
 - Adiciona design system base, tokens de tema e Zustand com persistência local.

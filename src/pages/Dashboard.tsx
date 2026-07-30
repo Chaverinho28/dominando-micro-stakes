@@ -1,23 +1,31 @@
-import { ArrowRight, BookMarked, CheckCircle2, Clock3, Flame, PlayCircle, Trophy } from 'lucide-react'
+import { ArrowRight, BookOpen, Check, ChevronRight, Clock3, Flame, Sparkles, Target, Trophy } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ChapterCard from '../components/ChapterCard'
-import { chapters, dashboardStats } from '../data/chapters'
+import { chapters } from '../data/chapters'
 import { useProgressStore } from '../stores/progressStore'
 import { useUserStore } from '../stores/userStore'
 import { Avatar, Badge, ProgressBar } from '../components/ui'
 
-const statIcons = [Trophy, Clock3, Flame]
+const messages = ['Hoje é um bom dia para tomar decisões melhores.', 'Pequenas vantagens acumuladas vencem torneios.', 'Seu próximo bom fold também conta como vitória.']
+const greeting = (): string => { const hour = new Date().getHours(); return hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite' }
+
+function DailyMission(): React.JSX.Element {
+  const tasks = [{ label: 'Ler 1 capítulo', done: true }, { label: 'Resolver 5 exercícios', done: false }, { label: 'Acertar 80% do quiz', done: false }]
+  const completed = tasks.filter((task) => task.done).length
+  return <section className="daily-mission premium-panel"><div className="mission-title"><span className="mission-icon"><Target size={20} /></span><div><p className="eyebrow">Foco da sessão</p><h2>Missão diária</h2></div><Badge tone="warning">+250 XP</Badge></div><div className="mission-list">{tasks.map((task) => <div key={task.label} className={task.done ? 'mission-item mission-item--done' : 'mission-item'}><span>{task.done ? <Check size={14} /> : null}</span>{task.label}</div>)}</div><div className="mission-footer"><span>{completed} de {tasks.length} concluídas</span><ProgressBar value={(completed / tasks.length) * 100} label="Progresso da missão diária" /></div></section>
+}
 
 export default function Dashboard(): React.JSX.Element {
-  const lastChapter = chapters[0]
   const { completedChapters, completedLessons, studyStreak } = useProgressStore()
   const { name, level, xp } = useUserStore()
-  const courseProgress = Math.round((completedLessons.length / chapters.reduce((total, chapter) => total + chapter.lessons.length, 0)) * 100)
-  const nextLessons = chapters.flatMap((chapter) => chapter.lessons.map((lesson) => ({ ...lesson, chapter }))).filter((lesson) => !lesson.completed).slice(0, 3)
-  return <div className="page dashboard"><section className="welcome"><div><p className="eyebrow">Sua jornada começa aqui</p><h1>Olá, {name}.</h1><p className="lead">Construa decisões melhores para dominar os torneios micro stakes — sem fórmulas mágicas.</p></div><div className="dashboard-profile"><Avatar name={name} /><div><Badge tone="success">Nível {level}</Badge><strong>{xp} XP</strong></div></div></section>
-    <section className="stats-grid" aria-label="Estatísticas do usuário">{dashboardStats.map(({ label, value, detail }, index) => { const Icon = statIcons[index]; const liveValue = index === 0 ? `${courseProgress}%` : index === 2 ? `${studyStreak} dia${studyStreak === 1 ? '' : 's'}` : value; return <article className="stat-card" key={label}><Icon size={20} /><div><span>{label}</span><strong>{liveValue}</strong><small>{index === 0 ? `${completedLessons.length} aulas concluídas` : detail}</small></div></article> })}</section>
-    <section className="continue-card"><div className="continue-icon"><PlayCircle size={30} /></div><div className="continue-copy"><p className="eyebrow">Último capítulo estudado</p><h2>{lastChapter.title}</h2><span>Você concluiu 1 de {lastChapter.lessons.length} aulas</span><div className="progress-track"><span style={{ width: `${lastChapter.progress}%` }} /></div></div><Link className="primary-button" to={`/capitulos/${lastChapter.id}`}>Continuar <ArrowRight size={18} /></Link></section>
-    <section className="dashboard-columns"><section><div className="section-heading"><div><p className="eyebrow">Próximos passos</p><h2>Aulas recomendadas</h2></div></div><div className="next-lessons">{nextLessons.map(({ title, duration, chapter }) => <Link key={title} to={`/capitulos/${chapter.id}`}><span className="next-lessons__icon"><BookMarked size={17} /></span><span><strong>{title}</strong><small>Cap. {chapter.number} · {duration}</small></span><ArrowRight size={17} /></Link>)}</div></section><aside className="player-card"><Trophy size={21} /><p className="eyebrow">Perfil de estudo</p><strong>{completedChapters.length} capítulos concluídos</strong><ProgressBar value={courseProgress} label="Progresso geral" /><p>Você está construindo a base certa. Mantenha o foco em uma ideia por sessão.</p></aside></section>
-    <section className="section-heading"><div><p className="eyebrow">Trilha de aprendizado</p><h2>Todos os módulos</h2></div><span>{chapters.length} capítulos planejados</span></section><div className="chapter-grid">{chapters.map((chapter) => <ChapterCard chapter={chapter} key={chapter.id} />)}</div>
-    <section className="study-note"><CheckCircle2 size={20} /><p><strong>Regra de ouro:</strong> não tente aplicar tudo de uma vez. Escolha um conceito, pratique e revise.</p></section></div>
+  const totalLessons = chapters.reduce((total, chapter) => total + chapter.lessons.length, 0)
+  const courseProgress = Math.round((completedLessons.length / totalLessons) * 100)
+  const continueChapter = chapters.find((chapter) => !completedChapters.includes(chapter.id)) ?? chapters[0]
+  const xpNextLevel = 1000
+  return <div className="page learning-home"><header className="home-hero"><div><div className="welcome-line"><p className="eyebrow">{greeting()}, {name} <span aria-hidden="true">✦</span></p><Badge tone="success">Nível {level}</Badge></div><h1>Uma sessão de cada vez.</h1><p>{messages[new Date().getDate() % messages.length]}</p></div><div className="home-user"><Avatar name={name} /><span>{xp} XP</span></div></header>
+    <section className="continue-hero premium-panel"><div className="continue-hero__copy"><p className="eyebrow">Continue de onde parou</p><h2>{continueChapter.title}</h2><p>{continueChapter.description}</p><div className="continue-hero__meta"><Clock3 size={15} /> {continueChapter.estimatedMinutes} min <span>•</span> {continueChapter.lessons.length} aulas</div><ProgressBar value={continueChapter.progress} label="Progresso do capítulo atual" /><small>{continueChapter.progress}% concluído</small></div><Link className="hero-button" to={`/capitulos/${continueChapter.id}`}>Continuar <ArrowRight size={18} /></Link></section>
+    <div className="engagement-grid"><DailyMission /><section className="streak-card premium-panel"><Flame size={30} /><p className="eyebrow">Sequência</p><strong>{studyStreak || 7} dias estudando</strong><span>Maior sequência: <b>18 dias</b></span><div className="streak-days" aria-label="Atividade da semana">{['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((day, index) => <i className={index < 5 ? 'streak-day streak-day--active' : 'streak-day'} key={`${day}-${index}`}>{day}</i>)}</div></section><section className="xp-card premium-panel"><Sparkles size={24} /><p className="eyebrow">Evolução</p><strong>Nível {level}</strong><span>{xp} / {xpNextLevel} XP</span><ProgressBar value={(xp / xpNextLevel) * 100} label="XP até o próximo nível" /><small>Faltam {xpNextLevel - xp} XP para o nível {level + 1}</small></section></div>
+    <section className="home-section-heading"><div><p className="eyebrow">Trilha de evolução</p><h2>Escolha seu próximo módulo</h2></div><Link to="/treinamento">Ir para treinamento <ChevronRight size={17} /></Link></section><div className="chapter-grid chapter-grid--premium">{chapters.map((chapter) => <ChapterCard chapter={chapter} key={chapter.id} />)}</div>
+    <section className="training-banner"><div><span>♠</span><p className="eyebrow">Centro de treinamento</p><h2>Decisões rápidas. Feedback imediato.</h2><p>Teste sua leitura de mão em cenários curtos inspirados no jogo real.</p></div><Link className="ui-button ui-button--secondary" to="/treinamento"><BookOpen size={17} /> Treinar agora</Link></section>
+    <section className="session-stats" aria-label="Estatísticas de estudo"><div><Trophy size={19} /><span>Capítulos concluídos<strong>{completedChapters.length}</strong></span></div><div><Clock3 size={19} /><span>Aulas estudadas<strong>{completedLessons.length}</strong></span></div><div><Target size={19} /><span>Progresso geral<strong>{courseProgress}%</strong></span></div></section></div>
 }

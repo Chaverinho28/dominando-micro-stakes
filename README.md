@@ -24,6 +24,7 @@ npm run build
 - Capítulos estruturados por dados, com navegação, favoritos e conclusão.
 - Conteúdos completos dos módulos 3–8, incluindo capítulos Pré-Flop, Open Raise e Ranges Iniciais.
 - Flashcards e quiz com múltipla escolha, verdadeiro/falso e identificação de erros.
+- Home de aprendizado com missão diária, streak, XP e um Centro de Treinamento interativo.
 - Design system reutilizável e stores preparados para integração com autenticação.
 
 Consulte [a arquitetura](docs/architecture.md) e o [changelog](CHANGELOG.md) para detalhes de implementação.
