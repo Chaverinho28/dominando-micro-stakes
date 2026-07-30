@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 — Treinamento inteligente
+
+- Substitui o cenário único por um motor de treino pré-flop orientado por situações tipadas.
+- Adiciona filtros de posição, stack e spot; feedback pedagógico e próxima situação.
+- Persiste estatísticas locais: acertos, sequência, XP e tempo de treino.
+- Documenta o banco de situações e o limite de serviço para futura API/CMS.
+
 ## 0.5.0 — Product experience sprint
 
 - Redesenha a Home como experiência de aprendizado com continuidade, missão diária, XP e sequência.

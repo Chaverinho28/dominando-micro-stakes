@@ -1,0 +1,7 @@
+import type { StackDepth, TrainingCategory, TrainingFilters as Filters } from '../types'
+import { Chip } from '../../../components/ui'
+const positions = ['BTN', 'SB', 'BB'] as const
+const stacks = [20, 15, 10] as const
+const categories: { value: TrainingCategory; label: string }[] = [{ value: 'push-fold', label: 'Push/Fold' }, { value: 'open-raise', label: 'Open Raise' }, { value: 'three-bet', label: '3Bet' }]
+function toggle<T>(values: T[], value: T): T[] { return values.includes(value) ? values.filter((item) => item !== value) : [...values, value] }
+export default function TrainingFilters({ filters, onChange }: { filters: Filters; onChange: (filters: Filters) => void }): React.JSX.Element { return <section className="training-filters" aria-label="Filtros de treino"><div><span>Posição</span>{positions.map((position) => <Chip key={position} active={filters.positions.includes(position)} onClick={() => onChange({ ...filters, positions: toggle(filters.positions, position) })}>{position}</Chip>)}</div><div><span>Stack</span>{stacks.map((stack) => <Chip key={stack} active={filters.stacks.includes(stack)} onClick={() => onChange({ ...filters, stacks: toggle(filters.stacks, stack as StackDepth) })}>{stack}BB</Chip>)}</div><div><span>Spot</span>{categories.map((category) => <Chip key={category.value} active={filters.categories.includes(category.value)} onClick={() => onChange({ ...filters, categories: toggle(filters.categories, category.value) })}>{category.label}</Chip>)}</div></section> }
