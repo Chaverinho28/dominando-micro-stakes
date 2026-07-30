@@ -1,18 +1,19 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
-import Dashboard from './pages/Dashboard'
-import ChapterPage from './pages/ChapterPage'
-import NotFound from './pages/NotFound'
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const ChapterPage = lazy(() => import('./pages/ChapterPage'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App(): React.JSX.Element {
   return (
-    <Layout>
+    <Layout><Suspense fallback={<div className="route-loader" role="status">Carregando conteúdo...</div>}>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/capitulos/:chapterId" element={<ChapterPage />} />
         <Route path="/nao-encontrado" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/nao-encontrado" replace />} />
-      </Routes>
+      </Routes></Suspense>
     </Layout>
   )
 }

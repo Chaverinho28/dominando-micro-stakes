@@ -6,6 +6,8 @@ import CommonMistake from '../components/content/CommonMistake'
 import ExerciseBox from '../components/content/ExerciseBox'
 import SummaryBox from '../components/content/SummaryBox'
 import LessonLayout from '../components/LessonLayout'
+import Flashcards from '../components/Flashcards'
+import QuizRunner from '../components/QuizRunner'
 import { chapters, getChapter, type Quiz } from '../data/chapters'
 
 function QuizBox({ quiz }: { quiz: Quiz }): React.JSX.Element {
@@ -23,5 +25,5 @@ export default function ChapterPage(): React.JSX.Element {
   if (!chapter.content) return <IntroChapter chapter={chapter} />
   const previous = chapters[chapter.number - 2]
   const next = chapters[chapter.number]
-  return <LessonLayout chapter={chapter} previous={previous} next={next}>{chapter.content.map((section) => <section className="reading-section" key={section.heading}><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.example && <div className="example-box"><strong>{section.example.label}</strong><p>{section.example.text}</p></div>}</section>)}<CoachTip>{chapter.coachTip}</CoachTip><CommonMistake mistakes={chapter.commonMistakes ?? []} /><SummaryBox>{chapter.takeaway}</SummaryBox>{chapter.exercise && <ExerciseBox exercise={chapter.exercise} />}{chapter.quiz && <QuizBox quiz={chapter.quiz} />}</LessonLayout>
+  return <LessonLayout chapter={chapter} previous={previous} next={next}>{chapter.content.map((section) => <section className="reading-section" key={section.heading}><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.example && <div className="example-box"><strong>{section.example.label}</strong><p>{section.example.text}</p></div>}</section>)}<CoachTip>{chapter.coachTip}</CoachTip><CommonMistake mistakes={chapter.commonMistakes ?? []} /><SummaryBox>{chapter.takeaway}</SummaryBox>{chapter.exercise && <ExerciseBox exercise={chapter.exercise} />}{chapter.flashcards && <Flashcards cards={chapter.flashcards} />}{chapter.quizQuestions ? <QuizRunner questions={chapter.quizQuestions} /> : chapter.quiz && <QuizBox quiz={chapter.quiz} />}</LessonLayout>
 }

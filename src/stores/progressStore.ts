@@ -1,0 +1,4 @@
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+interface ProgressState { completedChapters: string[]; completedLessons: string[]; studyStreak: number; markChapterComplete: (id: string) => void; toggleLesson: (id: string) => void }
+export const useProgressStore = create<ProgressState>()(persist((set) => ({ completedChapters: [], completedLessons: ['fundamentos:0'], studyStreak: 1, markChapterComplete: (id) => set((state) => ({ completedChapters: state.completedChapters.includes(id) ? state.completedChapters.filter((item) => item !== id) : [...state.completedChapters, id] })), toggleLesson: (id) => set((state) => ({ completedLessons: state.completedLessons.includes(id) ? state.completedLessons.filter((item) => item !== id) : [...state.completedLessons, id] })) }), { name: 'micro-stakes-progress' }))
